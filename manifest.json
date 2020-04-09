@@ -1,0 +1,21 @@
+{
+"update_url": "https://clients2.google.com/service/update2/crx",
+
+  "manifest_version": 2,
+  "name": "OP.GG Summoner Search",
+  "description": "Search for the games that you have played with a certain summoner.",
+  "version": "2.5",
+  "permissions" : [
+      "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["custom.js", "jquery-3.1.0.min.js"]
+    }
+  ],
+  "icons": { 
+      "16": "opgg16.png",
+      "48": "opgg48.png",
+      "128": "opgg128.png" }
+}
