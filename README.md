@@ -1,3 +1,4 @@
+# NSFW CONTENT BELOW
 ![code snippet of my disgusting extension](https://i.imgur.com/CFt42ku.png)
 why
 
