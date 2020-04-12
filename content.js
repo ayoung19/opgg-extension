@@ -43,16 +43,83 @@ function updateMap() {
         var summoners = games[i].querySelectorAll(".SummonerName");
         for(var j = 0; j < summoners.length; j++) {
             var str = summoners[j].innerText;
-            if(str != user && map[str] != undefined) {
-                map[str].push(i);
-            } else {
-                map[str] = [];
-                map[str].push(i);
+            if(str != user) {
+                if(map[str] != undefined) {
+                    map[str].push(i);
+                } else {
+                    addToList(str, false);
+                    map[str] = [];
+                    map[str].push(i + listGroup * 10);
+                }
             }
         }
     }
     console.log(Object.keys(map));
     listGroup++;
+}
+
+function createListItem(name) {
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.setAttribute("class", "Link");
+    a.style.cursor = "pointer";
+    li.setAttribute("class", "Item show");
+    li.appendChild(a);
+    a.innerHTML = name;
+    return li;
+}
+
+function addToList(name, first) {
+    var listItem = createListItem(name);
+    if(first) {
+        listItem.onclick = function() {
+            show(this.innerText);
+        }
+    } else {
+        listItem.onclick = function() {
+            filter(this.innerText);
+        }
+    }
+    search.querySelector(".All .ChampionList").appendChild(listItem);
+}
+
+function addRecents() {
+    var recents = document.querySelectorAll(".left_select_played_with_summoner");
+    for(var i = 0; i < recents.length; i++) {
+        var listItem = createListItem(recents[i].innerText);
+        listItem.onclick = function() {
+            filter(this.innerText);
+        }
+        search.querySelector(".Recent .ChampionList").appendChild(listItem);
+    }
+}
+
+function filter(name) {
+    var games = document.querySelectorAll(".GameItemWrap");
+    var show = map[name];
+    for(var i = 0; i < games.length; i++) {
+        games[i].style.display = "none";
+    }
+    for(var i = 0; i < show.length; i++) {
+        games[show[i]].style.display = "block";
+    }
+}
+
+function show() {
+    var games = document.querySelectorAll(".GameItemWrap");
+    for(var i = 0; i < games.length; i++) {
+        games[i].style.display = "block";
+    }
+}
+
+// FIX
+function find(query) {
+    var all = search.querySelector(".All .ChampionList").children;
+    for(var i = 0; i < all.length; i++) {
+        if(all[i].innerText.substring(0, query.length).toLowerCase() != query.toLowerCase() && all[i].innerText != "All Summoners") {
+            search.querySelector(".All .ChampionList").children[i].style.display = "none";
+        }
+    }
 }
 
 function loadAllGames() {
@@ -84,4 +151,11 @@ function addElements() {
     })
     document.querySelector(".Navigation .Actions").appendChild(search);
     search.querySelector(".Content").style.display = "block";
+
+    addRecents();
+    addToList("All Summoners", true);
+
+    search.querySelector(".Input").onkeypress = function() {
+        find(search.querySelector(".Input").value)
+    }
 }
