@@ -19,8 +19,12 @@ setTimeout(load, 100);
 
 function load() {
     var addButton = document.querySelector(".GameMoreButton a");
-    addButton.addEventListener("click", checkAdded);
-    updateMap();
+    if(addButton != null) {
+        addButton.onclick = function() {
+            checkAdded();
+        }
+        updateMap();
+    }
 }
 
 function checkAdded() {
@@ -28,11 +32,34 @@ function checkAdded() {
     var observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             observer.disconnect();
-            updateMap();
+            load();
         });
     });
     var config = { attributes: true, childList: true, characterData: true };
     observer.observe(target, config);
+}
+
+function loadAllGames() {
+}
+//FIX
+/*
+function loadAllGames() {
+    showMore();
+    var target = document.querySelector(".GameMoreButton a");
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if(document.querySelector(".GameMoreButton a") == undefined) {
+                observer.disconnect();
+            }
+        });
+    });
+    var config = { attributes: true, childList: true, characterData: true };
+    observer.observe(target, config);
+}
+*/
+
+function showMore() {
+    document.querySelector(".GameMoreButton a").click();
 }
 
 var listGroup = 0;
@@ -47,7 +74,6 @@ function updateMap() {
                 if(map[str] != undefined) {
                     map[str].push(i);
                 } else {
-                    addToList(str, false);
                     map[str] = [];
                     map[str].push(i + listGroup * 10);
                 }
@@ -83,6 +109,13 @@ function addToList(name, first) {
     search.querySelector(".All .ChampionList").appendChild(listItem);
 }
 
+function clearList() {
+    var list = search.querySelector(".All .ChampionList");
+    for(var i = list.children.length - 1; i > 1; i--) {
+        list.children[i].remove();
+    }
+}
+
 function addRecents() {
     var recents = document.querySelectorAll(".left_select_played_with_summoner");
     for(var i = 0; i < recents.length; i++) {
@@ -94,36 +127,69 @@ function addRecents() {
     }
 }
 
+var prev = [];
+function resetText() {
+    var games = document.querySelectorAll(".GameItemWrap");
+    for(var i = 0; i < prev.length; i++) {
+        console.log(prev.length)
+        var names = games[prev[i]].querySelectorAll(".SummonerName a");
+        for(var j = 0; j < names.length; j++) {
+            if(names[j].innerText != user) {
+                names[j].style.color = "inherit";
+            }
+        }
+    }
+}
 function filter(name) {
     var games = document.querySelectorAll(".GameItemWrap");
     var show = map[name];
+
+    resetText();
+
     for(var i = 0; i < games.length; i++) {
         games[i].style.display = "none";
     }
+
     for(var i = 0; i < show.length; i++) {
         games[show[i]].style.display = "block";
+        var names = games[show[i]].querySelectorAll(".SummonerName a");
+        for(var j = 0; j < names.length; j++) {
+            if(names[j].innerText == name) {
+                names[j].style.color = "black";
+            }
+        }
     }
+
+    prev = show;
 }
 
 function show() {
     var games = document.querySelectorAll(".GameItemWrap");
+
+    resetText();
+
     for(var i = 0; i < games.length; i++) {
         games[i].style.display = "block";
     }
 }
 
-// FIX
-function find(query) {
-    var all = search.querySelector(".All .ChampionList").children;
-    for(var i = 0; i < all.length; i++) {
-        if(all[i].innerText.substring(0, query.length).toLowerCase() != query.toLowerCase() && all[i].innerText != "All Summoners") {
-            search.querySelector(".All .ChampionList").children[i].style.display = "none";
+function searchList(query) {
+    var all = Object.keys(map);
+    var matches = [];
+
+    clearList();
+
+    if(query.length != 0) {
+        for(var i = 0; i < all.length; i++) {
+            if(all[i].substring(0, query.length).toLowerCase() == query.toLowerCase()) {
+                matches.push(all[i]);
+            }
+        }
+
+        for(var i = 0; i < matches.length; i++) {
+            addToList(matches[i], false);
         }
     }
-}
-
-function loadAllGames() {
-    // TODO
 }
 
 function addElements() {
@@ -153,9 +219,9 @@ function addElements() {
     search.querySelector(".Content").style.display = "block";
 
     addRecents();
-    addToList("All Summoners", true);
+    addToList("Show All Summoners", true);
 
-    search.querySelector(".Input").onkeypress = function() {
-        find(search.querySelector(".Input").value)
-    }
+    search.querySelector(".Input").addEventListener("input", function() {
+        searchList(search.querySelector(".Input").value)
+    })
 }
