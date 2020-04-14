@@ -242,11 +242,9 @@ function addElements() {
     search.querySelector(".Input").addEventListener("input", function() {
         searchList(search.querySelector(".Input").value)
     })
-
     search.querySelector(".Input").onclick = function() {
         showList(true);
     }
-
     document.addEventListener('click', function(event) {
         if(!search.contains(event.target)) {
             showList(false);
@@ -254,7 +252,6 @@ function addElements() {
     });
 
     document.querySelector(".Navigation .Actions").appendChild(search);
-
 
     iconWrapper.setAttribute("class", "Action");
     icon.style.margin = "5px";
