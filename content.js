@@ -1,8 +1,11 @@
 var link = document.createElement("link");
 var button = document.createElement("button");
-var search = document.querySelector(".Navigation .Action").cloneNode(true);
+var champion = document.querySelector(".Navigation .Action");
+var search = champion.cloneNode(true);
 var listRecent = search.querySelector(".Recent ul");
 var listAll = search.querySelector(".All ul");
+var iconWrapper = document.createElement("div");
+var icon = document.createElement("i");
 
 var map = {};
 
@@ -40,12 +43,10 @@ function checkAdded() {
 }
 
 function loadAllGames() {
+    changeIcon(false);
     var addButton = document.querySelector(".GameMoreButton a");
     if(addButton != null) {
-        addButton.onclick = function() {
-
-        }
-
+        addButton.onclick = function() {};
         showMore();
     }
 }
@@ -84,6 +85,7 @@ function updateMap() {
             }
         }
     }
+    changeIcon(true);
     console.log(Object.keys(map));
 }
 
@@ -102,10 +104,12 @@ function addToList(name, first) {
     var listItem = createListItem(name);
     if(first) {
         listItem.onclick = function() {
-            show(this.innerText);
+            showList(false);
+            showAll();
         }
     } else {
         listItem.onclick = function() {
+            showList(false);
             filter(this.innerText);
         }
     }
@@ -125,6 +129,7 @@ function addRecents() {
         var listItem = createListItem(recents[i].innerText);
         listItem.onclick = function() {
             filter(this.innerText);
+            showList(false);
         }
         search.querySelector(".Recent .ChampionList").appendChild(listItem);
     }
@@ -166,7 +171,7 @@ function filter(name) {
     prev = show;
 }
 
-function show() {
+function showAll() {
     var games = document.querySelectorAll(".GameItemWrap");
 
     resetText();
@@ -195,10 +200,29 @@ function searchList(query) {
     }
 }
 
+function changeIcon(ready) {
+    if(ready) {
+        icon.setAttribute("class", "far fa-check-circle fa-2x");
+        icon.style.color = "green";
+    } else {
+        icon.setAttribute("class", "far fa-times-circle fa-2x");
+        icon.style.color = "red";
+    }
+}
+
+function showList(show) {
+    if(show) {
+        search.querySelector(".Content").style.display = "block";
+        champion.querySelector(".Content").style.display = "none";
+    } else {
+        search.querySelector(".Content").style.display = "none";
+    }
+}
+
 function addElements() {
+    link.setAttribute("href", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css");
     link.setAttribute("rel", "stylesheet");
     link.setAttribute("type", "text/css");
-    link.setAttribute("href", "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
     document.querySelector("head").appendChild(link);
 
     button.setAttribute("class", "Button SemiRound White");
@@ -215,16 +239,32 @@ function addElements() {
     listAll.querySelectorAll("li").forEach(function(el) {
         el.remove();
     })
-    document.querySelectorAll(".Navigation .Actions .Action").forEach(function(el) {
-        el.style.float = "right";
-    })
-    document.querySelector(".Navigation .Actions").appendChild(search);
-    search.querySelector(".Content").style.display = "block";
-
-    addRecents();
-    addToList("Show All Summoners", true);
-
     search.querySelector(".Input").addEventListener("input", function() {
         searchList(search.querySelector(".Input").value)
     })
+
+    search.querySelector(".Input").onclick = function() {
+        showList(true);
+    }
+
+    document.addEventListener('click', function(event) {
+        if(!search.contains(event.target)) {
+            showList(false);
+        }
+    });
+
+    document.querySelector(".Navigation .Actions").appendChild(search);
+
+
+    iconWrapper.setAttribute("class", "Action");
+    icon.style.margin = "5px";
+    iconWrapper.appendChild(icon);
+    document.querySelector(".Navigation .Actions").appendChild(iconWrapper);
+
+    document.querySelectorAll(".Navigation .Actions .Action").forEach(function(el) {
+        el.style.float = "right";
+    })
+
+    addRecents();
+    addToList("Show All Summoners", true);
 }
