@@ -40,32 +40,36 @@ function checkAdded() {
 }
 
 function loadAllGames() {
+    var addButton = document.querySelector(".GameMoreButton a");
+    if(addButton != null) {
+        addButton.onclick = function() {
+
+        }
+
+        showMore();
+    }
 }
-//FIX
-/*
-function loadAllGames() {
-    showMore();
+
+function showMore() {
+    document.querySelector(".GameMoreButton a").click();
     var target = document.querySelector(".GameMoreButton a");
     var observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
+            observer.disconnect();
             if(document.querySelector(".GameMoreButton a") == undefined) {
-                observer.disconnect();
+                updateMap();
+            } else {
+                showMore();
             }
         });
     });
     var config = { attributes: true, childList: true, characterData: true };
     observer.observe(target, config);
 }
-*/
 
-function showMore() {
-    document.querySelector(".GameMoreButton a").click();
-}
-
-var listGroup = 0;
 function updateMap() {
-    var list = document.querySelectorAll(".GameItemList")[listGroup];
-    var games = list.querySelectorAll(".GameItemWrap");
+    map = {};
+    var games = document.querySelectorAll(".GameItemWrap");
     for(var i = 0; i < games.length; i++) {
         var summoners = games[i].querySelectorAll(".SummonerName");
         for(var j = 0; j < summoners.length; j++) {
@@ -75,13 +79,12 @@ function updateMap() {
                     map[str].push(i);
                 } else {
                     map[str] = [];
-                    map[str].push(i + listGroup * 10);
+                    map[str].push(i);
                 }
             }
         }
     }
     console.log(Object.keys(map));
-    listGroup++;
 }
 
 function createListItem(name) {
