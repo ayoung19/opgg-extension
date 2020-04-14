@@ -1,6 +1,7 @@
 # Update!
 ![code snippet of my disgusting extension](https://i.imgur.com/m58J0TK.png)
-Example of what the below turned into.
+
+Example of what the NSFW code turned into.
 
 Refactoring of the extension is done. Honestly really surprised with how long it took. After the initial struggle of having to read my old code to figure out which elements were being interacted with, I was quickly able to divide up the functions into different components and work on them modularly, unlike how it was before. I'm really happy with the end product as it is just simply faster and the code is much more elegant/clean instead of spaghetti. I didn't take any shortcuts at all and refactoring with the intent of every single line of code in the extension being important and necessary. I feel like a 4 year burden has been lifted and am honestly pretty impressed with how much better my new version is.
 
