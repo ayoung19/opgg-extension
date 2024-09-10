@@ -1,8 +1,8 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "OP.GG Summoner Search",
     "description": "Search for the games that you have played with a certain summoner.",
-    "version": "3",
+    "version": "4.0.0",
     "content_scripts": [
         {
             "matches": ["*://*.op.gg/summoner/userName=*"],
