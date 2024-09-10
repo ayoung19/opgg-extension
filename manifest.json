@@ -6,7 +6,7 @@
     "content_scripts": [
         {
             "matches": ["*://*.op.gg/summoner/userName=*"],
-            "js": ["jquery-3.1.0.min.js", "content.js"]
+            "js": ["content.js"]
         }
     ],
     "icons": {
