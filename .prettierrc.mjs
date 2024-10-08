@@ -2,7 +2,7 @@
  * @type {import('prettier').Options}
  */
 export default {
-  printWidth: 100,
+  printWidth: 120,
   plugins: ["@ianvs/prettier-plugin-sort-imports"],
   importOrder: [
     "<BUILTIN_MODULES>", // Node.js built-in modules
@@ -14,6 +14,6 @@ export default {
     "",
     "^~(.*)$",
     "",
-    "^[./]"
-  ]
-}
+    "^[./]",
+  ],
+};
