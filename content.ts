@@ -191,7 +191,9 @@ setInterval(() => {
   showMoreButtonObserver.observe(showMoreButton, { childList: true, subtree: true });
 }, 1000);
 $summonerNameToGameIndices.watch((value) => {
-  const summonerFilterPopoverRight = getOrCreateSummonerFilter()
+  const summonerFilter = getOrCreateSummonerFilter();
+
+  const summonerFilterPopoverRight = summonerFilter
     ?.querySelector<HTMLElement>(".content")
     ?.querySelectorAll(":scope > ul > li")[1];
 
@@ -205,6 +207,11 @@ $summonerNameToGameIndices.watch((value) => {
 
   $selectedSummoner.set(undefined);
   $summonerFilterSearch.set("");
+
+  const summonerFilterInput = summonerFilter?.querySelector("input");
+  if (summonerFilterInput) {
+    summonerFilterInput.value = "";
+  }
 });
 
 export {};
