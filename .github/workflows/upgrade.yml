@@ -1,0 +1,49 @@
+name: Extension Upgrade
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version
+        required: true
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Update package.json version
+        run: |
+          ./scripts/version-check.sh
+          jq '.version = $ENV.VERSION' package.json > tmp && mv tmp package.json
+          pnpm install
+          pnpm format
+        env:
+          VERSION: ${{ inputs.version }}
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          message: "v${{ inputs.version }}"
+          tag: "v${{ inputs.version }}"
+
+      - uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          branch: ${{ github.ref }}
