@@ -1,7 +1,7 @@
 {
   "name": "opgg-extension",
   "displayName": "OP.GG Summoner Search",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Search for the games that you have played with a certain summoner.",
   "author": "Andy Young <andyluyoung@gmail.com>",
   "scripts": {
